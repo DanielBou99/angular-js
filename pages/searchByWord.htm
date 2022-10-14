@@ -1,1 +1,13 @@
-SearchByWord
+<div class="spinner-border" role="status" ng-if="loading">
+    <span class="visually-hidden">Loading...</span>
+</div>
+
+
+<section ng-if="!loading">
+    <div class="card" ng-repeat="advice in advices">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted">{{ advice.id }}</h6>
+          <p class="card-text">{{ advice.advice }}</p>
+        </div>
+    </div>
+</section>

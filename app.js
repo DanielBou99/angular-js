@@ -46,11 +46,32 @@ weatherApp.controller('forecastController', ['$scope', '$http',
             console.log('### error request ###')
             console.log(response);
             $scope.loading = false;
-        });
+    });
 }]);
 
-weatherApp.controller('searchByWordController', ['$scope', 'cityService',
-                function($scope, cityService) {
+weatherApp.controller('searchByWordController', ['$scope', '$http', 'cityService',
+                function($scope, $http, cityService) {
+    $scope.loading = true;
     $scope.searchByWord = cityService.searchByWord;
-    console.log($scope.searchByWord);
+
+    apiLink = 'https://api.adviceslip.com/advice/search/' + $scope.searchByWord;
+
+    $http({
+        method: 'GET',
+        url: apiLink
+      }).then(function successCallback(response) {
+            console.log(response);
+            if (response?.data?.message?.text.search('/No advice slips/') === -1) {
+
+            } else {
+                $scope.advices = response?.data?.slips;
+            }
+            console.log($scope.advices);
+            $scope.loading = false;
+        }, function errorCallback(response) {
+            console.log('### error request ###')
+            console.log(response);
+            $scope.loading = false;
+    });
+
 }]);
