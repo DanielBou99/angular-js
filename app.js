@@ -1,16 +1,16 @@
 // MODULE
-var weatherApp = angular.module('weatherApp', ['ngRoute', 'ngResource']);
+var adviceApp = angular.module('adviceApp', ['ngRoute', 'ngResource']);
 
 // ROUTES
-weatherApp.config(function ($routeProvider,) {
+adviceApp.config(function ($routeProvider,) {
     $routeProvider
     .when('/', {
         templateUrl: 'pages/home.htm',
         controller: 'homeController'
     })
-    .when('/forecast', {
-        templateUrl: 'pages/forecast.htm',
-        controller: 'forecastController'
+    .when('/oneAdvice', {
+        templateUrl: 'pages/oneAdvice.htm',
+        controller: 'oneAdviceController'
     })
     .when('/searchByWord', {
         templateUrl: 'pages/searchByWord.htm',
@@ -19,20 +19,20 @@ weatherApp.config(function ($routeProvider,) {
 });
 
 // SERVICES
-weatherApp.service('cityService', function() {
+adviceApp.service('adviceService', function() {
     this.searchByWord = '';
 });
 
 // CONTROLLERS
-weatherApp.controller('homeController', ['$scope', 'cityService', 
-                function($scope, cityService) {
-    $scope.searchByWord = cityService.searchByWord;
+adviceApp.controller('homeController', ['$scope', 'adviceService', 
+                function($scope, adviceService) {
+    $scope.searchByWord = adviceService.searchByWord;
     $scope.$watch('searchByWord', function() {
-        cityService.searchByWord = $scope.searchByWord;
+        adviceService.searchByWord = $scope.searchByWord;
     });
 }]);
 
-weatherApp.controller('forecastController', ['$scope', '$http', 
+adviceApp.controller('oneAdviceController', ['$scope', '$http', 
                 function($scope, $http) {
     $scope.loading = true;
     $http({
@@ -49,10 +49,10 @@ weatherApp.controller('forecastController', ['$scope', '$http',
     });
 }]);
 
-weatherApp.controller('searchByWordController', ['$scope', '$http', 'cityService',
-                function($scope, $http, cityService) {
+adviceApp.controller('searchByWordController', ['$scope', '$http', 'adviceService',
+                function($scope, $http, adviceService) {
     $scope.loading = true;
-    $scope.searchByWord = cityService.searchByWord;
+    $scope.searchByWord = adviceService.searchByWord;
 
     apiLink = 'https://api.adviceslip.com/advice/search/' + $scope.searchByWord;
 
@@ -82,7 +82,7 @@ weatherApp.controller('searchByWordController', ['$scope', '$http', 'cityService
 }]);
 
 // DIRECTIVES
-weatherApp.directive("cardAdvice", function() {
+adviceApp.directive("cardAdvice", function() {
     return {
         restrict: 'AECM',
         templateUrl: 'directives/cardAdviceResult.htm',
