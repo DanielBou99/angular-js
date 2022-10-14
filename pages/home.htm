@@ -1,9 +1,33 @@
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-        <h4>Forecast by City</h4>
-        <div class="form-group">
-            <input type="text" ng-model="city" class="form-control" />
+    
+    <section>
+        <div class="col-md-6 col-md-offset-3">
+            <a href="#/forecast" class="btn btn-primary">Get one advice randomly</a>
         </div>
-        <a href="#/forecast" class="btn btn-primary">Get Forecast</a>
-    </div>
+    </section>
+
+    <section>
+        <h5>Search by word</h5>
+        <div class="input-group input-group-sm mb-3 col-md-6 col-md-offset-3">
+            <input 
+                type="text" 
+                class="form-control mb-3" 
+                aria-label="Sizing example input" 
+                aria-describedby="inputGroup-sizing-sm" 
+                ng-model="searchByWord"
+            />
+          </div>
+        <div class="col-md-6 col-md-offset-3">
+            <a href="#/searchByWord" class="btn btn-primary">Search</a>
+        </div>
+    </section>
+
 </div>
+
+<style>
+    section {
+        margin-bottom: 1%;
+        border-bottom: 1px solid black;
+        padding: 1%;
+    }
+</style>
