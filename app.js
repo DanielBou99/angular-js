@@ -62,7 +62,12 @@ weatherApp.controller('searchByWordController', ['$scope', '$http', 'cityService
       }).then(function successCallback(response) {
             console.log(response);
             if (response?.data?.message?.text.search('/No advice slips/') === -1) {
-
+                $scope.advices = [
+                    {
+                        id: 0,
+                        advice: 'No advice found'
+                    }
+                ];
             } else {
                 $scope.advices = response?.data?.slips;
             }
@@ -75,3 +80,15 @@ weatherApp.controller('searchByWordController', ['$scope', '$http', 'cityService
     });
 
 }]);
+
+// DIRECTIVES
+weatherApp.directive("cardAdvice", function() {
+    return {
+        restrict: 'AECM',
+        templateUrl: 'directives/cardAdviceResult.htm',
+        replace: true,
+        scope: {
+            adviceObject: "="
+        }
+    }
+ });
