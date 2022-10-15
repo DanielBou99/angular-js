@@ -19,64 +19,74 @@ adviceApp.config(function ($routeProvider,) {
 });
 
 // SERVICES
-adviceApp.service('adviceService', function() {
+adviceApp.service('adviceService', ['$http', function($http) {
     this.searchByWord = '';
-});
+    API_ENDPOINT = 'https://api.adviceslip.com/advice';
+
+    this.GetOneAdvice = function() {
+        return $http({
+            method: 'GET',
+            url: API_ENDPOINT
+          });
+    };
+
+    this.GetAdviceByWord = function (palavra) {
+        return $http({
+            method: 'GET',
+            url: API_ENDPOINT + '/search/' + palavra
+          });
+    };
+
+}]);
 
 // CONTROLLERS
 adviceApp.controller('homeController', ['$scope', 'adviceService', 
                 function($scope, adviceService) {
     $scope.searchByWord = adviceService.searchByWord;
+    
     $scope.$watch('searchByWord', function() {
         adviceService.searchByWord = $scope.searchByWord;
     });
 }]);
 
-adviceApp.controller('oneAdviceController', ['$scope', '$http', 
-                function($scope, $http) {
+adviceApp.controller('oneAdviceController', ['$scope', 'adviceService', 
+                function($scope, adviceService) {
     $scope.loading = true;
-    $http({
-        method: 'GET',
-        url: 'https://api.adviceslip.com/advice'
-      }).then(function successCallback(response) {
-            console.log(response.data.slip);
-            $scope.advice = response.data.slip;
-            $scope.loading = false;
-        }, function errorCallback(response) {
-            console.log('### error request ###')
-            console.log(response);
-            $scope.loading = false;
+
+    adviceService.GetOneAdvice().then(function successCallback(response) {
+        $scope.advice = response.data.slip;
+        $scope.loading = false;
+    }, function errorCallback(response) {
+        console.log('### error request ###')
+        console.log(response);
+        $scope.loading = false;
     });
+
 }]);
 
-adviceApp.controller('searchByWordController', ['$scope', '$http', 'adviceService',
-                function($scope, $http, adviceService) {
+adviceApp.controller('searchByWordController', ['$scope', 'adviceService',
+                function($scope, adviceService) {
     $scope.loading = true;
     $scope.searchByWord = adviceService.searchByWord;
 
-    apiLink = 'https://api.adviceslip.com/advice/search/' + $scope.searchByWord;
-
-    $http({
-        method: 'GET',
-        url: apiLink
-      }).then(function successCallback(response) {
-            console.log(response);
-            if (response?.data?.message?.text.search('/No advice slips/') === -1) {
-                $scope.advices = [
-                    {
-                        id: 0,
-                        advice: 'No advice found'
-                    }
-                ];
-            } else {
-                $scope.advices = response?.data?.slips;
-            }
-            console.log($scope.advices);
-            $scope.loading = false;
-        }, function errorCallback(response) {
-            console.log('### error request ###')
-            console.log(response);
-            $scope.loading = false;
+    adviceService.GetAdviceByWord($scope.searchByWord).then(function successCallback(response) {
+        console.log(response);
+        if (response?.data?.message?.text.search('/No advice slips/') === -1) {
+            $scope.advices = [
+                {
+                    id: 0,
+                    advice: 'No advice found'
+                }
+            ];
+        } else {
+            $scope.advices = response?.data?.slips;
+        }
+        console.log($scope.advices);
+        $scope.loading = false;
+    }, function errorCallback(response) {
+        console.log('### error request ###')
+        console.log(response);
+        $scope.loading = false;
     });
 
 }]);
